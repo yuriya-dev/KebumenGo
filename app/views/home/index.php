@@ -9,14 +9,30 @@ $categories = [
     ['name' => 'Buatan', 'slug' => 'buatan', 'pill_class' => 'pill-6'],
 ];
 
-$popularDestinations = [
-    ['name' => 'Pantai Logending', 'slug' => 'pantai-logending', 'category' => 'Pantai', 'price' => 25000, 'rating' => 4.8, 'reviews' => 128, 'media_class' => 'media-1', 'badge' => 'Murah'],
-    ['name' => 'Goa Jatijajar', 'slug' => 'goa-jatijajar', 'category' => 'Goa', 'price' => 30000, 'rating' => 4.7, 'reviews' => 92, 'media_class' => 'media-2', 'badge' => 'Populer'],
-    ['name' => 'Benteng Van der Wijck', 'slug' => 'benteng-van-der-wijck', 'category' => 'Sejarah', 'price' => 20000, 'rating' => 4.6, 'reviews' => 64, 'media_class' => 'media-3'],
-    ['name' => 'Pantai Karang Bolong', 'slug' => 'pantai-karang-bolong', 'category' => 'Pantai', 'price' => 25000, 'rating' => 4.5, 'reviews' => 83, 'media_class' => 'media-4'],
-    ['name' => 'Sate Ambal', 'slug' => 'sate-ambal', 'category' => 'Kuliner', 'price' => 35000, 'rating' => 4.9, 'reviews' => 210, 'media_class' => 'media-5', 'badge' => 'Favorit'],
-    ['name' => 'Bukit Pentulu Indah', 'slug' => 'bukit-pentulu-indah', 'category' => 'Alam', 'price' => 15000, 'rating' => 4.4, 'reviews' => 55, 'media_class' => 'media-6'],
-];
+try {
+    $db = getDB();
+    $stmt = $db->query("
+        SELECT d.*, c.name as category, 
+               COALESCE(AVG(r.rating), 0) as rating, 
+               COUNT(r.id) as reviews,
+               IF(d.ticket_price < 20000, 'Murah', NULL) as badge
+        FROM destinations d
+        JOIN categories c ON d.category_id = c.id
+        LEFT JOIN reviews r ON r.dest_id = d.id AND r.status = 'approved'
+        WHERE d.status = 'active'
+        GROUP BY d.id
+        ORDER BY rating DESC
+        LIMIT 6
+    ");
+    $popularDestinations = $stmt->fetchAll();
+    
+    if (empty($popularDestinations)) {
+        $popularDestinations = [];
+    }
+} catch (Exception $e) {
+    $popularDestinations = [];
+    error_log("DB Error: " . $e->getMessage());
+}
 
 $itineraries = [
     ['title' => 'Trip 1 hari Pantai Selatan', 'time' => '08:00 - 16:00', 'budget' => 120000, 'notes' => 'Pantai Logending, Karang Bolong, kuliner sore'],
@@ -57,10 +73,10 @@ ob_start();
             </div>
         </div>
         <div class="hero-collage" aria-hidden="true">
-            <div class="hero-tile tile-1">Pantai Selatan</div>
-            <div class="hero-tile tile-2">Goa Eksotis</div>
-            <div class="hero-tile tile-3">Kuliner Lokal</div>
-            <div class="hero-tile tile-4">Sunrise Hills</div>
+            <div class="hero-tile tile-1" style="background-image: url('<?= $baseUrl; ?>public/images/destinations/pantai-selatan.jpg'); background-size: cover; background-position: center;">Pantai Selatan</div>
+            <div class="hero-tile tile-2" style="background-image: url('<?= $baseUrl; ?>public/images/destinations/goa.jpg'); background-size: cover; background-position: center;">Goa Eksotis</div>
+            <div class="hero-tile tile-3" style="background-image: url('<?= $baseUrl; ?>public/images/destinations/kuliner.jpg'); background-size: cover; background-position: center;">Kuliner Lokal</div>
+            <div class="hero-tile tile-4" style="background-image: url('<?= $baseUrl; ?>public/images/destinations/hills.jpg'); background-size: cover; background-position: center;">Sunrise Hills</div>
         </div>
     </div>
 </section>

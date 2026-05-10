@@ -1,12 +1,27 @@
 <?php
 $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
+$currentPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '', '/');
+$isDashboard = $currentPath === 'admin/dashboard';
+$isAnalitik = str_starts_with($currentPath, 'admin/analitik');
+$isDestinasi = str_starts_with($currentPath, 'admin/destinasi') || str_starts_with($currentPath, 'admin/kategori');
+$isUlasan = str_starts_with($currentPath, 'admin/ulasan');
+$isPengaturan = str_starts_with($currentPath, 'admin/pengaturan');
+
+function navClass(bool $active, string $extra = ''): string
+{
+    $base = $active
+        ? 'flex items-center gap-3 rounded-[10px] bg-textPrimary px-3 py-2 text-white'
+        : 'flex items-center gap-3 rounded-[10px] px-3 py-2 text-textSecondary hover:bg-surface';
+
+    return trim($base . ' ' . $extra);
+}
 ?>
 <!doctype html>
 <html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Destinasi | Admin KebumenGo</title>
+    <title>Dashboard | Admin KebumenGo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -45,36 +60,21 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
             <div class="mt-8">
                 <p class="text-xs font-semibold uppercase tracking-widest text-textSecondary">Menu</p>
                 <nav class="mt-4 grid gap-2">
-                    <a href="<?= $baseUrl; ?>admin/dashboard" class="flex items-center gap-3 rounded-[10px] px-3 py-2 text-textSecondary hover:bg-surface">
+                    <a href="<?= $baseUrl; ?>admin/dashboard" class="<?= navClass($isDashboard); ?>" <?= $isDashboard ? 'aria-current="page"' : ''; ?>>
                         <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
                         Dashboard
                     </a>
-                    <a href="#" class="flex items-center gap-3 rounded-[10px] px-3 py-2 text-textSecondary hover:bg-surface">
+                    <a href="<?= $baseUrl; ?>admin/analitik" class="<?= navClass($isAnalitik); ?>" <?= $isAnalitik ? 'aria-current="page"' : ''; ?>>
                         <i data-lucide="bar-chart-2" class="h-4 w-4"></i>
                         Analitik
                     </a>
-                    <a href="#" class="flex items-center gap-3 rounded-[10px] bg-textPrimary px-3 py-2 text-white">
+                    <a href="<?= $baseUrl; ?>admin/destinasi" class="<?= navClass($isDestinasi); ?>" <?= $isDestinasi ? 'aria-current="page"' : ''; ?>>
                         <i data-lucide="map-pin" class="h-4 w-4"></i>
                         Destinasi
                     </a>
-                    <a href="#" class="flex items-center gap-3 rounded-[10px] px-3 py-2 text-textSecondary hover:bg-surface">
-                        <i data-lucide="users" class="h-4 w-4"></i>
-                        Pengunjung
-                    </a>
-                    <a href="#" class="flex items-center gap-3 rounded-[10px] px-3 py-2 text-textSecondary hover:bg-surface">
+                    <a href="<?= $baseUrl; ?>admin/ulasan" class="<?= navClass($isUlasan); ?>" <?= $isUlasan ? 'aria-current="page"' : ''; ?>>
                         <i data-lucide="star" class="h-4 w-4"></i>
                         Ulasan
-                    </a>
-                    <a href="#" class="flex items-center justify-between rounded-[10px] px-3 py-2 text-textSecondary hover:bg-surface">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="message-square" class="h-4 w-4"></i>
-                            Pesan
-                        </span>
-                        <span class="rounded-lg bg-accent/20 px-2 py-0.5 text-xs font-semibold text-accent">5</span>
-                    </a>
-                    <a href="#" class="flex items-center gap-3 rounded-[10px] px-3 py-2 text-textSecondary hover:bg-surface">
-                        <i data-lucide="bell" class="h-4 w-4"></i>
-                        Notifikasi
                     </a>
                 </nav>
             </div>
@@ -82,37 +82,19 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
             <div class="mt-8">
                 <p class="text-xs font-semibold uppercase tracking-widest text-textSecondary">Account</p>
                 <nav class="mt-4 grid gap-2">
-                    <a href="#" class="flex items-center gap-3 rounded-[10px] px-3 py-2 text-textSecondary hover:bg-surface">
-                        <i data-lucide="file-text" class="h-4 w-4"></i>
-                        Laporan
-                    </a>
-                    <a href="#" class="flex items-center gap-3 rounded-[10px] px-3 py-2 text-textSecondary hover:bg-surface">
+                    <a href="<?= $baseUrl; ?>admin/pengaturan" class="<?= navClass($isPengaturan); ?>" <?= $isPengaturan ? 'aria-current="page"' : ''; ?>>
                         <i data-lucide="settings" class="h-4 w-4"></i>
                         Pengaturan
                     </a>
                 </nav>
             </div>
-
-            <div class="mt-8 rounded-xl border border-border bg-surface p-4">
-                <div class="flex items-center gap-3 text-textPrimary">
-                    <i data-lucide="rocket" class="h-5 w-5"></i>
-                    <div>
-                        <p class="text-sm font-semibold">Siap scale up?</p>
-                        <span class="text-xs text-textSecondary">Fitur premium untuk tim</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="mt-auto w-full rounded-lg bg-textPrimary px-4 py-3 text-sm font-semibold text-white">
-                ⬆ Upgrade ke Pro
-            </button>
         </aside>
 
         <main class="ml-[240px] flex h-screen w-full flex-col overflow-y-auto">
             <header class="flex items-center justify-between border-b border-border bg-white px-8 py-4">
                 <div>
-                    <h1 class="text-2xl font-semibold">Destinasi</h1>
-                    <p class="text-sm text-textSecondary">Ringkasan performa destinasi wisata Kebumen.</p>
+                    <h1 class="text-2xl font-semibold">Dashboard</h1>
+                    <p class="text-sm text-textSecondary">Ringkasan performa pariwisata Kebumen.</p>
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="relative hidden w-72 md:block">
@@ -347,10 +329,10 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
                     </div>
 
                     <div class="col-span-12 xl:col-span-3 space-y-4">
-                        <button class="flex w-full items-center justify-center gap-2 rounded-xl bg-textPrimary px-4 py-3 text-sm font-semibold text-white">
+                        <a href="<?= $baseUrl; ?>admin/destinasi/create" class="flex w-full items-center justify-center gap-2 rounded-xl bg-textPrimary px-4 py-3 text-sm font-semibold text-white">
                             <i data-lucide="plus" class="h-4 w-4"></i>
                             Tambah Destinasi
-                        </button>
+                        </a>
                         <div class="rounded-xl border border-border bg-surface p-5">
                             <div class="flex items-center justify-between">
                                 <div>

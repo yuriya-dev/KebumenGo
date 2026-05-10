@@ -1,15 +1,30 @@
 <?php
 $pageTitle = 'Destinasi';
-$destinations = [
-    ['name' => 'Pantai Logending', 'slug' => 'pantai-logending', 'category' => 'Pantai', 'price' => 25000, 'rating' => 4.8, 'reviews' => 128, 'media_class' => 'media-1', 'badge' => 'Murah'],
-    ['name' => 'Pantai Karang Bolong', 'slug' => 'pantai-karang-bolong', 'category' => 'Pantai', 'price' => 25000, 'rating' => 4.5, 'reviews' => 83, 'media_class' => 'media-4'],
-    ['name' => 'Goa Jatijajar', 'slug' => 'goa-jatijajar', 'category' => 'Goa', 'price' => 30000, 'rating' => 4.7, 'reviews' => 92, 'media_class' => 'media-2'],
-    ['name' => 'Goa Petruk', 'slug' => 'goa-petruk', 'category' => 'Goa', 'price' => 20000, 'rating' => 4.6, 'reviews' => 48, 'media_class' => 'media-5'],
-    ['name' => 'Benteng Van der Wijck', 'slug' => 'benteng-van-der-wijck', 'category' => 'Sejarah', 'price' => 20000, 'rating' => 4.6, 'reviews' => 64, 'media_class' => 'media-3'],
-    ['name' => 'Sate Ambal', 'slug' => 'sate-ambal', 'category' => 'Kuliner', 'price' => 35000, 'rating' => 4.9, 'reviews' => 210, 'media_class' => 'media-6', 'badge' => 'Favorit'],
-    ['name' => 'Bukit Pentulu Indah', 'slug' => 'bukit-pentulu-indah', 'category' => 'Alam', 'price' => 15000, 'rating' => 4.4, 'reviews' => 55, 'media_class' => 'media-1'],
-    ['name' => 'Pantai Petanahan', 'slug' => 'pantai-petanahan', 'category' => 'Pantai', 'price' => 20000, 'rating' => 4.3, 'reviews' => 61, 'media_class' => 'media-2'],
-];
+try {
+    $db = getDB();
+    $stmt = $db->query("
+        SELECT d.*, c.name as category, 
+               COALESCE(AVG(r.rating), 0) as rating, 
+               COUNT(r.id) as reviews,
+               IF(d.ticket_price < 20000, 'Murah', NULL) as badge
+        FROM destinations d
+        JOIN categories c ON d.category_id = c.id
+        LEFT JOIN reviews r ON r.dest_id = d.id AND r.status = 'approved'
+        WHERE d.status = 'active'
+        GROUP BY d.id
+        ORDER BY d.created_at DESC
+    ");
+    $destinations = $stmt->fetchAll();
+    
+    // Fallback if DB is completely empty or query fails (though exception will be caught)
+    if (empty($destinations)) {
+        $destinations = [];
+    }
+} catch (Exception $e) {
+    // If DB fails, fallback to empty array or show error
+    $destinations = [];
+    error_log("DB Error: " . $e->getMessage());
+}
 
 $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 

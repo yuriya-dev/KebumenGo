@@ -5,14 +5,26 @@ $people = max(1, (int)($_GET['orang'] ?? 2));
 $budget = max(0, (int)($_GET['budget'] ?? 200000));
 $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 
-$destinations = [
-    ['name' => 'Pantai Logending', 'slug' => 'pantai-logending', 'category' => 'Pantai', 'category_slug' => 'pantai', 'ticket_price' => 25000, 'est_food' => 20000, 'est_parking' => 10000, 'rating' => 4.8, 'reviews' => 128, 'media_class' => 'media-1'],
-    ['name' => 'Pantai Karang Bolong', 'slug' => 'pantai-karang-bolong', 'category' => 'Pantai', 'category_slug' => 'pantai', 'ticket_price' => 25000, 'est_food' => 15000, 'est_parking' => 10000, 'rating' => 4.5, 'reviews' => 83, 'media_class' => 'media-4'],
-    ['name' => 'Goa Jatijajar', 'slug' => 'goa-jatijajar', 'category' => 'Goa', 'category_slug' => 'goa', 'ticket_price' => 30000, 'est_food' => 15000, 'est_parking' => 8000, 'rating' => 4.7, 'reviews' => 92, 'media_class' => 'media-2'],
-    ['name' => 'Goa Petruk', 'slug' => 'goa-petruk', 'category' => 'Goa', 'category_slug' => 'goa', 'ticket_price' => 20000, 'est_food' => 12000, 'est_parking' => 7000, 'rating' => 4.6, 'reviews' => 48, 'media_class' => 'media-5'],
-    ['name' => 'Benteng Van der Wijck', 'slug' => 'benteng-van-der-wijck', 'category' => 'Sejarah', 'category_slug' => 'sejarah', 'ticket_price' => 20000, 'est_food' => 15000, 'est_parking' => 8000, 'rating' => 4.6, 'reviews' => 64, 'media_class' => 'media-3'],
-    ['name' => 'Sate Ambal', 'slug' => 'sate-ambal', 'category' => 'Kuliner', 'category_slug' => 'kuliner', 'ticket_price' => 0, 'est_food' => 35000, 'est_parking' => 5000, 'rating' => 4.9, 'reviews' => 210, 'media_class' => 'media-6'],
-];
+try {
+    $db = getDB();
+    $stmt = $db->query("
+        SELECT d.*, c.name as category, c.slug as category_slug,
+               COALESCE(AVG(r.rating), 0) as rating, 
+               COUNT(r.id) as reviews
+        FROM destinations d
+        JOIN categories c ON d.category_id = c.id
+        LEFT JOIN reviews r ON r.dest_id = d.id AND r.status = 'approved'
+        WHERE d.status = 'active'
+        GROUP BY d.id
+    ");
+    $destinations = $stmt->fetchAll();
+    if (empty($destinations)) {
+        $destinations = [];
+    }
+} catch (Exception $e) {
+    $destinations = [];
+    error_log("DB Error: " . $e->getMessage());
+}
 
 $matches = [];
 $closest = null;
@@ -73,7 +85,7 @@ ob_start();
             <div class="result-grid">
                 <?php foreach ($matches as $destination): ?>
                     <article class="result-card">
-                        <div class="card-media <?= htmlspecialchars($destination['media_class'], ENT_QUOTES, 'UTF-8'); ?>"></div>
+                        <div class="card-media" style="background-image: url('<?= $baseUrl . htmlspecialchars(str_replace('public/', '', (!empty($destination['main_photo']) ? $destination['main_photo'] : 'images/placeholders/destination-placeholder.svg')), ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;"></div>
                         <div class="card-body">
                             <div class="card-meta">
                                 <span class="card-category"><?= htmlspecialchars($destination['category'], ENT_QUOTES, 'UTF-8'); ?></span>

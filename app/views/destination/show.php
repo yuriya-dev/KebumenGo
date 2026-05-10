@@ -2,61 +2,39 @@
 $pageTitle = 'Detail Destinasi';
 $slug = $viewData['slug'] ?? 'pantai-logending';
 
-$destinations = [
-    'pantai-logending' => [
-        'name' => 'Pantai Logending',
-        'category' => 'Pantai',
-        'rating' => 4.8,
-        'reviews' => 128,
-        'location' => 'Kecamatan Ayah',
-        'ticket_price' => 25000,
-        'est_food' => 20000,
-        'est_parking' => 10000,
-        'description' => 'Pantai dengan panorama samudra luas, cocok untuk keluarga dan pecinta sunset.',
-        'facilities' => ['Toilet', 'Mushola', 'Parkir', 'Warung'],
-        'open' => '07:00',
-        'close' => '18:00',
-        'days' => 'Senin - Minggu',
-        'maps' => 'https://www.google.com/maps?q=pantai+logending&output=embed',
-        'tips' => ['Datang sebelum jam 09:00', 'Bawa topi dan sunscreen', 'Parkir di area resmi'],
-    ],
-    'goa-jatijajar' => [
-        'name' => 'Goa Jatijajar',
-        'category' => 'Goa',
-        'rating' => 4.7,
-        'reviews' => 92,
-        'location' => 'Kecamatan Ayah',
-        'ticket_price' => 30000,
-        'est_food' => 15000,
-        'est_parking' => 8000,
-        'description' => 'Goa kapur dengan sejarah menarik dan jalur wisata yang nyaman.',
-        'facilities' => ['Toilet', 'Mushola', 'Parkir', 'Pemandu'],
-        'open' => '08:00',
-        'close' => '17:00',
-        'days' => 'Senin - Minggu',
-        'maps' => 'https://www.google.com/maps?q=goa+jatijajar&output=embed',
-        'tips' => ['Gunakan alas kaki anti slip', 'Ikuti jalur pemandu', 'Bawa air minum'],
-    ],
-    'sate-ambal' => [
-        'name' => 'Sate Ambal',
-        'category' => 'Kuliner',
-        'rating' => 4.9,
-        'reviews' => 210,
-        'location' => 'Kecamatan Ambal',
-        'ticket_price' => 0,
-        'est_food' => 35000,
-        'est_parking' => 5000,
-        'description' => 'Sate khas Kebumen dengan bumbu tempe yang gurih dan unik.',
-        'facilities' => ['Parkir', 'Mushola', 'Pembayaran Tunai'],
-        'open' => '10:00',
-        'close' => '22:00',
-        'days' => 'Senin - Minggu',
-        'maps' => 'https://www.google.com/maps?q=sate+ambal&output=embed',
-        'tips' => ['Datang sebelum jam 19:00', 'Coba bumbu tempe khas', 'Parkir di depan warung'],
-    ],
-];
+try {
+    $db = getDB();
+    
+    $stmt = $db->prepare("
+        SELECT d.*, c.name as category, 
+               COALESCE(AVG(r.rating), 0) as rating, 
+               COUNT(r.id) as reviews
+        FROM destinations d
+        JOIN categories c ON d.category_id = c.id
+        LEFT JOIN reviews r ON r.dest_id = d.id AND r.status = 'approved'
+        WHERE d.slug = ? AND d.status = 'active'
+        GROUP BY d.id
+    ");
+    $stmt->execute([$slug]);
+    $destination = $stmt->fetch();
 
-$destination = $destinations[$slug] ?? $destinations['pantai-logending'];
+    if (!$destination) {
+        redirect('destinasi'); // redirect if not found
+    }
+
+    $destination['facilities'] = !empty($destination['facilities']) ? json_decode($destination['facilities'], true) : [];
+    $destination['tips'] = ['Patuhi peraturan setempat', 'Jaga kebersihan lokasi', 'Bawa barang secukupnya'];
+    $destination['main_photo'] = !empty($destination['main_photo']) ? $destination['main_photo'] : 'images/placeholders/destination-placeholder.svg';
+
+    $stmtReviews = $db->prepare("SELECT * FROM reviews WHERE dest_id = ? AND status = 'approved' ORDER BY created_at DESC LIMIT 5");
+    $stmtReviews->execute([$destination['id']]);
+    $reviewsList = $stmtReviews->fetchAll();
+
+} catch (Exception $e) {
+    error_log("DB Error: " . $e->getMessage());
+    redirect('destinasi');
+}
+
 $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 
 ob_start();
@@ -65,10 +43,8 @@ ob_start();
     <div class="container detail-grid">
         <div class="detail-media">
             <div class="media-stack">
-                <div class="media-main"></div>
-                <div class="media-thumb media-1"></div>
-                <div class="media-thumb media-2"></div>
-                <div class="media-thumb media-3"></div>
+                <div class="media-main" style="background-image: url('<?= $baseUrl . htmlspecialchars(str_replace('public/', '', $destination['main_photo']), ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;"></div>
+                <div class="media-thumb" style="background-image: url('<?= $baseUrl . htmlspecialchars(str_replace('public/', '', $destination['main_photo']), ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;"></div>
             </div>
         </div>
         <div class="detail-info">
@@ -154,20 +130,19 @@ ob_start();
         </div>
         <div class="review-list">
             <h3>Ulasan terbaru</h3>
-            <article class="review-card">
-                <div class="review-header">
-                    <strong>Rina</strong>
-                    <span>5/5</span>
-                </div>
-                <p>Suasananya bersih, parkir luas, dan spot foto banyak.</p>
-            </article>
-            <article class="review-card">
-                <div class="review-header">
-                    <strong>Yoga</strong>
-                    <span>4.5/5</span>
-                </div>
-                <p>Cocok untuk keluarga, hanya saja ramai saat akhir pekan.</p>
-            </article>
+            <?php if (empty($reviewsList)): ?>
+                <p>Belum ada ulasan.</p>
+            <?php else: ?>
+                <?php foreach ($reviewsList as $rev): ?>
+                    <article class="review-card">
+                        <div class="review-header">
+                            <strong><?= htmlspecialchars($rev['name'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <span><?= number_format($rev['rating'], 1); ?>/5</span>
+                        </div>
+                        <p><?= htmlspecialchars($rev['comment'], ENT_QUOTES, 'UTF-8'); ?></p>
+                    </article>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </section>

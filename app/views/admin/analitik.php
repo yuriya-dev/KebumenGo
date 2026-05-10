@@ -1,0 +1,242 @@
+<?php
+$baseUrl = defined('BASE_URL') ? BASE_URL : '/';
+$currentPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '', '/');
+$isDashboard = $currentPath === 'admin/dashboard';
+$isAnalitik = str_starts_with($currentPath, 'admin/analitik');
+$isDestinasi = str_starts_with($currentPath, 'admin/destinasi') || str_starts_with($currentPath, 'admin/kategori');
+$isUlasan = str_starts_with($currentPath, 'admin/ulasan');
+$isPengaturan = str_starts_with($currentPath, 'admin/pengaturan');
+
+function navClass(bool $active, string $extra = ''): string
+{
+    $base = $active
+        ? 'flex items-center gap-3 rounded-[10px] bg-textPrimary px-3 py-2 text-white'
+        : 'flex items-center gap-3 rounded-[10px] px-3 py-2 text-textSecondary hover:bg-surface';
+
+    return trim($base . ' ' . $extra);
+}
+?>
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Analitik | Admin KebumenGo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        accent: '#F59E0B',
+                        surface: '#F8FAFC',
+                        textPrimary: '#0F172A',
+                        textSecondary: '#64748B',
+                        border: '#E2E8F0'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-white font-sans text-textPrimary">
+    <div class="flex h-screen overflow-hidden">
+        <aside class="fixed left-0 top-0 flex h-screen w-[240px] flex-col border-r border-border bg-white px-5 py-6">
+            <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white">KG</div>
+                <div>
+                    <p class="text-sm font-semibold">KebumenGo</p>
+                    <span class="text-xs text-textSecondary">Admin Panel</span>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <p class="text-xs font-semibold uppercase tracking-widest text-textSecondary">Menu</p>
+                <nav class="mt-4 grid gap-2">
+                    <a href="<?= $baseUrl; ?>admin/dashboard" class="<?= navClass($isDashboard); ?>" <?= $isDashboard ? 'aria-current="page"' : ''; ?>>
+                        <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                        Dashboard
+                    </a>
+                    <a href="<?= $baseUrl; ?>admin/analitik" class="<?= navClass($isAnalitik); ?>" <?= $isAnalitik ? 'aria-current="page"' : ''; ?>>
+                        <i data-lucide="bar-chart-2" class="h-4 w-4"></i>
+                        Analitik
+                    </a>
+                    <a href="<?= $baseUrl; ?>admin/destinasi" class="<?= navClass($isDestinasi); ?>" <?= $isDestinasi ? 'aria-current="page"' : ''; ?>>
+                        <i data-lucide="map-pin" class="h-4 w-4"></i>
+                        Destinasi
+                    </a>
+                    <a href="<?= $baseUrl; ?>admin/ulasan" class="<?= navClass($isUlasan); ?>" <?= $isUlasan ? 'aria-current="page"' : ''; ?>>
+                        <i data-lucide="star" class="h-4 w-4"></i>
+                        Ulasan
+                    </a>
+                </nav>
+            </div>
+
+            <div class="mt-8">
+                <p class="text-xs font-semibold uppercase tracking-widest text-textSecondary">Account</p>
+                <nav class="mt-4 grid gap-2">
+                    <a href="<?= $baseUrl; ?>admin/pengaturan" class="<?= navClass($isPengaturan); ?>" <?= $isPengaturan ? 'aria-current="page"' : ''; ?>>
+                        <i data-lucide="settings" class="h-4 w-4"></i>
+                        Pengaturan
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <main class="ml-[240px] flex h-screen w-full flex-col overflow-y-auto">
+            <header class="flex items-center justify-between border-b border-border bg-white px-8 py-4">
+                <div>
+                    <h1 class="text-2xl font-semibold">Analitik</h1>
+                    <p class="text-sm text-textSecondary">Wawasan mendalam tentang performa platform dan perilaku pengunjung.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-full bg-surface"></div>
+                        <div class="text-sm">
+                            <p class="font-semibold">Admin Kebumen</p>
+                            <span class="text-xs text-textSecondary">admin@kebumengo.id</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="space-y-6 px-8 py-6">
+                <!-- Overview Stats -->
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                    <div class="rounded-2xl border border-border bg-white p-6 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-medium text-textSecondary">Total Tayangan Halaman</h3>
+                            <i data-lucide="eye" class="h-5 w-5 text-textSecondary"></i>
+                        </div>
+                        <p class="mt-4 text-3xl font-bold">124.5K</p>
+                        <p class="mt-2 flex items-center gap-1 text-sm text-emerald-600">
+                            <i data-lucide="trending-up" class="h-4 w-4"></i>
+                            <span class="font-medium">12.5%</span> dari bulan lalu
+                        </p>
+                    </div>
+                    <div class="rounded-2xl border border-border bg-white p-6 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-medium text-textSecondary">Pengunjung Unik</h3>
+                            <i data-lucide="users" class="h-5 w-5 text-textSecondary"></i>
+                        </div>
+                        <p class="mt-4 text-3xl font-bold">45.2K</p>
+                        <p class="mt-2 flex items-center gap-1 text-sm text-emerald-600">
+                            <i data-lucide="trending-up" class="h-4 w-4"></i>
+                            <span class="font-medium">8.1%</span> dari bulan lalu
+                        </p>
+                    </div>
+                    <div class="rounded-2xl border border-border bg-white p-6 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-medium text-textSecondary">Durasi Sesi Rata-rata</h3>
+                            <i data-lucide="clock" class="h-5 w-5 text-textSecondary"></i>
+                        </div>
+                        <p class="mt-4 text-3xl font-bold">04:12</p>
+                        <p class="mt-2 flex items-center gap-1 text-sm text-red-500">
+                            <i data-lucide="trending-down" class="h-4 w-4"></i>
+                            <span class="font-medium">-1.2%</span> dari bulan lalu
+                        </p>
+                    </div>
+                    <div class="rounded-2xl border border-border bg-white p-6 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-medium text-textSecondary">Rasio Pentalan</h3>
+                            <i data-lucide="activity" class="h-5 w-5 text-textSecondary"></i>
+                        </div>
+                        <p class="mt-4 text-3xl font-bold">32.4%</p>
+                        <p class="mt-2 flex items-center gap-1 text-sm text-emerald-600">
+                            <i data-lucide="trending-down" class="h-4 w-4"></i>
+                            <span class="font-medium">-4.5%</span> dari bulan lalu
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Charts Area -->
+                <div class="grid gap-6 lg:grid-cols-2">
+                    <div class="rounded-2xl border border-border bg-white p-6 shadow-sm">
+                        <h3 class="mb-4 text-lg font-semibold">Trafik Kunjungan Mingguan</h3>
+                        <div class="h-72 flex items-end gap-2">
+                            <!-- Dummy Bar Chart using tailwind classes -->
+                            <div class="w-full h-full flex items-end justify-between px-2">
+                                <div class="w-1/12 bg-primary/20 hover:bg-primary transition-colors rounded-t-md h-[40%] relative group">
+                                    <div class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-textPrimary text-white text-xs px-2 py-1 rounded">Sen</div>
+                                </div>
+                                <div class="w-1/12 bg-primary/20 hover:bg-primary transition-colors rounded-t-md h-[60%] relative group">
+                                    <div class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-textPrimary text-white text-xs px-2 py-1 rounded">Sel</div>
+                                </div>
+                                <div class="w-1/12 bg-primary/20 hover:bg-primary transition-colors rounded-t-md h-[55%] relative group">
+                                    <div class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-textPrimary text-white text-xs px-2 py-1 rounded">Rab</div>
+                                </div>
+                                <div class="w-1/12 bg-primary/20 hover:bg-primary transition-colors rounded-t-md h-[80%] relative group">
+                                    <div class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-textPrimary text-white text-xs px-2 py-1 rounded">Kam</div>
+                                </div>
+                                <div class="w-1/12 bg-primary/20 hover:bg-primary transition-colors rounded-t-md h-[70%] relative group">
+                                    <div class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-textPrimary text-white text-xs px-2 py-1 rounded">Jum</div>
+                                </div>
+                                <div class="w-1/12 bg-primary/80 hover:bg-primary transition-colors rounded-t-md h-[95%] relative group">
+                                    <div class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-textPrimary text-white text-xs px-2 py-1 rounded">Sab</div>
+                                </div>
+                                <div class="w-1/12 bg-primary/70 hover:bg-primary transition-colors rounded-t-md h-[85%] relative group">
+                                    <div class="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-textPrimary text-white text-xs px-2 py-1 rounded">Min</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-border bg-white p-6 shadow-sm">
+                        <h3 class="mb-4 text-lg font-semibold">Sumber Trafik</h3>
+                        <div class="space-y-4 mt-8">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Pencarian Organik (Google)</span>
+                                    <span class="font-medium">45%</span>
+                                </div>
+                                <div class="w-full bg-surface rounded-full h-2">
+                                    <div class="bg-primary h-2 rounded-full" style="width: 45%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Media Sosial (Instagram, TikTok)</span>
+                                    <span class="font-medium">35%</span>
+                                </div>
+                                <div class="w-full bg-surface rounded-full h-2">
+                                    <div class="bg-accent h-2 rounded-full" style="width: 35%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Langsung / Direct</span>
+                                    <span class="font-medium">15%</span>
+                                </div>
+                                <div class="w-full bg-surface rounded-full h-2">
+                                    <div class="bg-emerald-500 h-2 rounded-full" style="width: 15%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Rujukan / Referral</span>
+                                    <span class="font-medium">5%</span>
+                                </div>
+                                <div class="w-full bg-surface rounded-full h-2">
+                                    <div class="bg-purple-500 h-2 rounded-full" style="width: 5%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
