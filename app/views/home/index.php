@@ -18,15 +18,23 @@ $popularDestinations = [
     ['name' => 'Bukit Pentulu Indah', 'slug' => 'bukit-pentulu-indah', 'category' => 'Alam', 'price' => 15000, 'rating' => 4.4, 'reviews' => 55, 'media_class' => 'media-6'],
 ];
 
+$itineraries = [
+    ['title' => 'Trip 1 hari Pantai Selatan', 'time' => '08:00 - 16:00', 'budget' => 120000, 'notes' => 'Pantai Logending, Karang Bolong, kuliner sore'],
+    ['title' => 'Half day Goa & Sejarah', 'time' => '09:00 - 13:00', 'budget' => 90000, 'notes' => 'Goa Jatijajar + Benteng Van der Wijck'],
+    ['title' => 'Kuliner malam Kebumen', 'time' => '18:00 - 21:00', 'budget' => 75000, 'notes' => 'Sate Ambal, jajanan lokal, kopi tradisional'],
+];
+
 $testimonials = [
     ['name' => 'Reza', 'role' => 'Backpacker', 'comment' => 'Budgetku pas banget. Rekomendasinya akurat dan gampang dipakai.', 'rating' => 4.8],
     ['name' => 'Budi', 'role' => 'Kepala Keluarga', 'comment' => 'Bisa hitung biaya untuk 4 orang dengan cepat. Hemat waktu.', 'rating' => 4.7],
     ['name' => 'Citra', 'role' => 'Road Tripper', 'comment' => 'Cocok buat mampir singkat. Destinasinya jelas dan rapi.', 'rating' => 4.6],
 ];
 
+$baseUrl = defined('BASE_URL') ? BASE_URL : '/';
+
 ob_start();
 ?>
-<section class="hero">
+<section class="hero" data-reveal>
     <div class="container hero-grid">
         <div class="hero-copy">
             <span class="eyebrow">Wisata cerdas, budget tepat</span>
@@ -57,7 +65,7 @@ ob_start();
     </div>
 </section>
 
-<section class="section" id="kategori">
+<section class="section" id="kategori" data-reveal>
     <div class="container">
         <div class="section-head">
             <h2>Jelajahi berdasarkan kategori</h2>
@@ -71,7 +79,7 @@ ob_start();
     </div>
 </section>
 
-<section class="section surface">
+<section class="section surface" data-reveal>
     <div class="container">
         <div class="section-head">
             <h2>Destinasi populer minggu ini</h2>
@@ -85,7 +93,7 @@ ob_start();
     </div>
 </section>
 
-<section class="section promo" id="tentang">
+<section class="section promo" id="tentang" data-reveal>
     <div class="container promo-grid">
         <div class="promo-copy">
             <span class="eyebrow">Kenapa KebumenGo</span>
@@ -115,7 +123,7 @@ ob_start();
     </div>
 </section>
 
-<section class="section">
+<section class="section" data-reveal>
     <div class="container">
         <div class="section-head">
             <h2>Ulasan pengunjung</h2>
@@ -135,6 +143,41 @@ ob_start();
                 </article>
             <?php endforeach; ?>
         </div>
+    </div>
+</section>
+
+<section class="section surface" data-reveal>
+    <div class="container">
+        <div class="section-head">
+            <h2>Rencana cepat untuk berbagai tipe traveler</h2>
+            <p>Pilih itinerary instan sesuai waktu dan budget. Tinggal cek dan jalan.</p>
+        </div>
+        <div class="itinerary-grid">
+            <?php foreach ($itineraries as $itinerary): ?>
+                <article class="itinerary-card">
+                    <div>
+                        <span class="eyebrow"><?= htmlspecialchars($itinerary['time'], ENT_QUOTES, 'UTF-8'); ?></span>
+                        <h3><?= htmlspecialchars($itinerary['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p><?= htmlspecialchars($itinerary['notes'], ENT_QUOTES, 'UTF-8'); ?></p>
+                    </div>
+                    <div class="itinerary-meta">
+                        <span class="badge badge-accent">Budget <?= formatRupiah($itinerary['budget']); ?></span>
+                        <a class="btn btn-outline" href="<?= $baseUrl; ?>rekomendasi">Cek rekomendasi</a>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
+<section class="section cta" data-reveal>
+    <div class="container cta-card">
+        <div>
+            <span class="eyebrow">Siap berangkat?</span>
+            <h2>Mulai rencanakan wisata Kebumen hari ini.</h2>
+            <p>Masukkan budget kamu dan dapatkan daftar destinasi yang cocok untuk semua anggota rombongan.</p>
+        </div>
+        <a class="btn btn-primary" href="<?= $baseUrl; ?>rekomendasi">Mulai hitung budget</a>
     </div>
 </section>
 <?php

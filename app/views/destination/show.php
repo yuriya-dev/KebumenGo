@@ -18,6 +18,7 @@ $destinations = [
         'close' => '18:00',
         'days' => 'Senin - Minggu',
         'maps' => 'https://www.google.com/maps?q=pantai+logending&output=embed',
+        'tips' => ['Datang sebelum jam 09:00', 'Bawa topi dan sunscreen', 'Parkir di area resmi'],
     ],
     'goa-jatijajar' => [
         'name' => 'Goa Jatijajar',
@@ -34,6 +35,7 @@ $destinations = [
         'close' => '17:00',
         'days' => 'Senin - Minggu',
         'maps' => 'https://www.google.com/maps?q=goa+jatijajar&output=embed',
+        'tips' => ['Gunakan alas kaki anti slip', 'Ikuti jalur pemandu', 'Bawa air minum'],
     ],
     'sate-ambal' => [
         'name' => 'Sate Ambal',
@@ -50,6 +52,7 @@ $destinations = [
         'close' => '22:00',
         'days' => 'Senin - Minggu',
         'maps' => 'https://www.google.com/maps?q=sate+ambal&output=embed',
+        'tips' => ['Datang sebelum jam 19:00', 'Coba bumbu tempe khas', 'Parkir di depan warung'],
     ],
 ];
 
@@ -58,7 +61,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 
 ob_start();
 ?>
-<section class="section detail-hero">
+<section class="section detail-hero" data-reveal>
     <div class="container detail-grid">
         <div class="detail-media">
             <div class="media-stack">
@@ -91,7 +94,7 @@ ob_start();
     </div>
 </section>
 
-<section class="section surface">
+<section class="section surface" data-reveal>
     <div class="container info-grid">
         <div class="info-card">
             <h3>Fasilitas</h3>
@@ -107,6 +110,14 @@ ob_start();
             <p><?= htmlspecialchars($destination['open'], ENT_QUOTES, 'UTF-8'); ?> - <?= htmlspecialchars($destination['close'], ENT_QUOTES, 'UTF-8'); ?></p>
         </div>
         <div class="info-card">
+            <h3>Tips perjalanan</h3>
+            <ul class="tip-list">
+                <?php foreach ($destination['tips'] as $tip): ?>
+                    <li><?= htmlspecialchars($tip, ENT_QUOTES, 'UTF-8'); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="info-card">
             <h3>Lokasi</h3>
             <div class="map-embed">
                 <iframe src="<?= htmlspecialchars($destination['maps'], ENT_QUOTES, 'UTF-8'); ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Peta <?= htmlspecialchars($destination['name'], ENT_QUOTES, 'UTF-8'); ?>"></iframe>
@@ -115,7 +126,7 @@ ob_start();
     </div>
 </section>
 
-<section class="section">
+<section class="section" data-reveal>
     <div class="container review-grid">
         <div class="review-form">
             <h3>Tulis ulasan</h3>

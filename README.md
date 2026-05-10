@@ -17,6 +17,11 @@ php -S localhost:8000
 - `/destinasi` (Daftar destinasi)
 - `/destinasi/{slug}` (Detail destinasi)
 - `/rekomendasi` (Hasil rekomendasi budget)
+- `/admin/login` (Panel admin)
+
+## Demo login admin
+- Email: admin@kebumengo.id
+- Password: kebumen2026
 
 ## Catatan
 - File SQL ada di `database/kebumengo.sql`.

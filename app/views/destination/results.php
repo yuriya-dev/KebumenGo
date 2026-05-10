@@ -41,7 +41,7 @@ usort($matches, function (array $a, array $b): int {
 
 ob_start();
 ?>
-<section class="section page-hero">
+<section class="section page-hero" data-reveal>
     <div class="container">
         <span class="eyebrow">Hasil rekomendasi</span>
         <h1><?= count($matches); ?> destinasi ditemukan</h1>
@@ -53,7 +53,7 @@ ob_start();
     </div>
 </section>
 
-<section class="section surface">
+<section class="section surface" data-reveal>
     <div class="container">
         <?php if (count($matches) === 0): ?>
             <div class="empty-state">

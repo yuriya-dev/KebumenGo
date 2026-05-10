@@ -11,13 +11,19 @@ $destinations = [
     ['name' => 'Pantai Petanahan', 'slug' => 'pantai-petanahan', 'category' => 'Pantai', 'price' => 20000, 'rating' => 4.3, 'reviews' => 61, 'media_class' => 'media-2'],
 ];
 
+$baseUrl = defined('BASE_URL') ? BASE_URL : '/';
+
 ob_start();
 ?>
-<section class="section page-hero">
+<section class="section page-hero" data-reveal>
     <div class="container">
         <span class="eyebrow">Direktori destinasi</span>
         <h1>Semua destinasi wisata Kebumen</h1>
         <p>Filter cepat, urutkan harga, dan temukan destinasi yang cocok untuk rencana liburanmu.</p>
+        <div class="info-strip">
+            <span>Tip: mulai dari budget Rp 75.000 untuk 1 orang.</span>
+            <a class="btn btn-outline" href="<?= $baseUrl; ?>rekomendasi">Coba hitung budget</a>
+        </div>
         <div class="filter-bar">
             <div class="filter-tabs">
                 <button class="tab is-active" type="button">Semua</button>
@@ -25,6 +31,8 @@ ob_start();
                 <button class="tab" type="button">Goa</button>
                 <button class="tab" type="button">Sejarah</button>
                 <button class="tab" type="button">Kuliner</button>
+                <button class="tab" type="button">Alam</button>
+                <button class="tab" type="button">Buatan</button>
             </div>
             <div class="filter-actions">
                 <input type="text" placeholder="Cari nama destinasi" />
@@ -37,7 +45,7 @@ ob_start();
     </div>
 </section>
 
-<section class="section surface">
+<section class="section surface" data-reveal>
     <div class="container">
         <div class="destination-grid">
             <?php foreach ($destinations as $destination): ?>
