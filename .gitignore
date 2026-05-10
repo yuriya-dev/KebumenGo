@@ -1,0 +1,5 @@
+.env
+/public/uploads/
+/vendor/
+
+PROJECT_BRIEF_KebumenGo.md

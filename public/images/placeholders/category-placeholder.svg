@@ -1,0 +1,6 @@
+<svg width="220" height="280" viewBox="0 0 220 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="220" height="280" rx="110" fill="#CFFAFE"/>
+  <circle cx="110" cy="110" r="46" fill="#38BDF8"/>
+  <path d="M70 190C95 165 125 165 150 190" stroke="#0EA5E9" stroke-width="10" stroke-linecap="round"/>
+  <text x="56" y="240" font-family="Plus Jakarta Sans, sans-serif" font-size="20" font-weight="600" fill="#0F172A">Kategori</text>
+</svg>

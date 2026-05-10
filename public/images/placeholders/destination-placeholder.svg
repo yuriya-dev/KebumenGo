@@ -1,0 +1,7 @@
+<svg width="640" height="480" viewBox="0 0 640 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="480" fill="#E2E8F0"/>
+  <rect x="40" y="40" width="560" height="320" rx="24" fill="#CBD5F5"/>
+  <circle cx="120" cy="140" r="40" fill="#93C5FD"/>
+  <path d="M80 260C130 200 210 210 260 260" stroke="#60A5FA" stroke-width="12" stroke-linecap="round"/>
+  <text x="40" y="420" font-family="Plus Jakarta Sans, sans-serif" font-size="28" font-weight="600" fill="#64748B">KebumenGo</text>
+</svg>
