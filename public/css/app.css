@@ -377,6 +377,11 @@ a {
 .pill-5 { background: linear-gradient(160deg, #10b981, #84cc16); }
 .pill-6 { background: linear-gradient(160deg, #7c3aed, #c084fc); }
 
+/* Pill dengan gambar nyata */
+.pill-has-img {
+    background-color: #1e293b; /* fallback saat gambar loading */
+}
+
 .destination-grid,
 .result-grid {
     display: grid;

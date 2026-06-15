@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: kebumengo_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: kebumengo
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/kebumengo.sql:/docker-entrypoint-initdb.d/kebumengo.sql
+    networks:
+      - kebumengo_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: kebumengo_phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: password
+      PMA_ROOT_PASSWORD: password
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    networks:
+      - kebumengo_network
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kebumengo_php
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_NAME: kebumengo
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - kebumengo_network
+    command: php -S 0.0.0.0:8000
+
+volumes:
+  mysql_data:
+
+networks:
+  kebumengo_network:
+    driver: bridge

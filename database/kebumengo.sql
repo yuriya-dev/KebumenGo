@@ -59,14 +59,17 @@ CREATE TABLE destination_photos (
 CREATE TABLE reviews (
   id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   dest_id     INT UNSIGNED NOT NULL,
+  user_id     INT UNSIGNED DEFAULT NULL,
   name        VARCHAR(100) NOT NULL,
   rating      TINYINT UNSIGNED NOT NULL CHECK (rating BETWEEN 1 AND 5),
   comment     TEXT NOT NULL,
   status      ENUM('pending','approved','rejected') DEFAULT 'pending',
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (dest_id) REFERENCES destinations(id) ON DELETE CASCADE
+  FOREIGN KEY (dest_id) REFERENCES destinations(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
+CREATE INDEX idx_reviews_user ON reviews(user_id);
 CREATE INDEX idx_destinations_category ON destinations(category_id);
 CREATE INDEX idx_destinations_status   ON destinations(status);
 CREATE INDEX idx_destinations_prices   ON destinations(ticket_price, est_food, est_parking);

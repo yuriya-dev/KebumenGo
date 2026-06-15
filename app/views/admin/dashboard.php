@@ -208,7 +208,8 @@ function navClass(bool $active, string $extra = ''): string
                 </section>
 
                 <section class="grid grid-cols-12 gap-6">
-                    <div class="col-span-12 xl:col-start-6 xl:col-span-7 rounded-xl border border-border bg-surface p-6">
+                    <!-- Statistik Kunjungan (8 Columns) -->
+                    <div class="col-span-12 xl:col-span-8 rounded-xl border border-border bg-surface p-6">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h2 class="text-lg font-semibold">Statistik Kunjungan</h2>
@@ -220,9 +221,8 @@ function navClass(bool $active, string $extra = ''): string
                             <canvas id="visitChart" aria-label="Grafik kunjungan"></canvas>
                         </div>
                     </div>
-                </section>
 
-                <section class="grid grid-cols-12 gap-6">
+                    <!-- Sebaran per Kecamatan (4 Columns) -->
                     <div class="col-span-12 xl:col-span-4 rounded-xl border border-border bg-surface p-6">
                         <div class="flex items-center justify-between">
                             <h2 class="text-lg font-semibold">Sebaran per Kecamatan</h2>
@@ -267,8 +267,11 @@ function navClass(bool $active, string $extra = ''): string
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    <div class="col-span-12 xl:col-span-5 rounded-xl border border-border bg-surface p-6">
+                <section class="grid grid-cols-12 gap-6">
+                    <!-- Destinasi Terpopuler (9 Columns) -->
+                    <div class="col-span-12 xl:col-span-9 rounded-xl border border-border bg-surface p-6">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h2 class="text-lg font-semibold">Destinasi Terpopuler</h2>
@@ -328,6 +331,7 @@ function navClass(bool $active, string $extra = ''): string
                         </div>
                     </div>
 
+                    <!-- Tambah Destinasi & Kalender (3 Columns) -->
                     <div class="col-span-12 xl:col-span-3 space-y-4">
                         <a href="<?= $baseUrl; ?>admin/destinasi/create" class="flex w-full items-center justify-center gap-2 rounded-xl bg-textPrimary px-4 py-3 text-sm font-semibold text-white">
                             <i data-lucide="plus" class="h-4 w-4"></i>

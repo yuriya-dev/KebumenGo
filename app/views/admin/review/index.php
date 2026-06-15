@@ -19,10 +19,11 @@ function navClass(bool $active, string $extra = ''): string
 try {
     $db = getDB();
     $stmt = $db->query("
-        SELECT r.id, r.name, d.name as destination, r.rating, 
+        SELECT r.id, COALESCE(u.name, r.name) as name, d.name as destination, r.rating, 
                ucfirst(r.status) as status, DATE_FORMAT(r.created_at, '%d %b %Y') as date, r.comment
         FROM reviews r
         JOIN destinations d ON r.dest_id = d.id
+        LEFT JOIN users u ON r.user_id = u.id
         ORDER BY r.created_at DESC
     ");
     $reviews = $stmt->fetchAll();
