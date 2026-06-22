@@ -6,12 +6,12 @@ $price = (int)($destination['price'] ?? 25000);
 $rating = (float)($destination['rating'] ?? 4.8);
 $reviews = (int)($destination['reviews'] ?? 120);
 $slug = $destination['slug'] ?? 'pantai-logending';
-$mainPhoto = !empty($destination['main_photo']) ? $destination['main_photo'] : 'images/placeholders/destination-placeholder.svg';
+$mainPhoto = !empty($destination['main_photo']) ? $destination['main_photo'] : 'public/images/placeholders/destination-placeholder.svg';
 $badge = $destination['badge'] ?? null;
 $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
 ?>
 <article class="destination-card">
-    <div class="card-media" style="background-image: url('<?= $baseUrl . htmlspecialchars(str_replace('public/', '', $mainPhoto), ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;">
+    <div class="card-media" style="background-image: url('<?= $baseUrl . htmlspecialchars($mainPhoto, ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;">
         <?php if ($badge): ?>
             <span class="badge badge-success"><?= htmlspecialchars($badge, ENT_QUOTES, 'UTF-8'); ?></span>
         <?php endif; ?>

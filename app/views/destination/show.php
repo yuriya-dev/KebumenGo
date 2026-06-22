@@ -24,7 +24,7 @@ try {
 
     $destination['facilities'] = !empty($destination['facilities']) ? json_decode($destination['facilities'], true) : [];
     $destination['tips'] = ['Patuhi peraturan setempat', 'Jaga kebersihan lokasi', 'Bawa barang secukupnya'];
-    $destination['main_photo'] = !empty($destination['main_photo']) ? $destination['main_photo'] : 'images/placeholders/destination-placeholder.svg';
+    $destination['main_photo'] = !empty($destination['main_photo']) ? $destination['main_photo'] : 'public/images/placeholders/destination-placeholder.svg';
 
     $stmtReviews = $db->prepare("SELECT * FROM reviews WHERE dest_id = ? AND status = 'approved' ORDER BY created_at DESC LIMIT 5");
     $stmtReviews->execute([$destination['id']]);
@@ -43,8 +43,8 @@ ob_start();
     <div class="container detail-grid">
         <div class="detail-media">
             <div class="media-stack">
-                <div class="media-main" style="background-image: url('<?= $baseUrl . htmlspecialchars(str_replace('public/', '', $destination['main_photo']), ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;"></div>
-                <div class="media-thumb" style="background-image: url('<?= $baseUrl . htmlspecialchars(str_replace('public/', '', $destination['main_photo']), ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;"></div>
+                <div class="media-main" style="background-image: url('<?= $baseUrl . htmlspecialchars($destination['main_photo'], ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;"></div>
+                <div class="media-thumb" style="background-image: url('<?= $baseUrl . htmlspecialchars($destination['main_photo'], ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;"></div>
             </div>
         </div>
         <div class="detail-info">

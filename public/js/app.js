@@ -9,9 +9,10 @@
         });
     }
 
-    const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+    const normalizePath = (p) => p.replace(/\/$/, '') || '/';
+    const currentPath = normalizePath(window.location.pathname);
     document.querySelectorAll('[data-nav-link]').forEach((link) => {
-        const href = link.getAttribute('href') || '';
+        const href = normalizePath(link.getAttribute('href') || '');
         if (href === currentPath) {
             link.classList.add('is-active');
         }

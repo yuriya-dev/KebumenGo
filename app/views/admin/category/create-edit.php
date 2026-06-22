@@ -66,7 +66,7 @@ function navClass(bool $active, string $extra = ''): string
                         <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
                         Dashboard
                     </a>
-                    <a href="#" class="<?= navClass(false); ?>">
+                    <a href="<?= $baseUrl; ?>admin/analitik" class="<?= navClass(false); ?>">
                         <i data-lucide="bar-chart-2" class="h-4 w-4"></i>
                         Analitik
                     </a>
@@ -74,24 +74,9 @@ function navClass(bool $active, string $extra = ''): string
                         <i data-lucide="map-pin" class="h-4 w-4"></i>
                         Destinasi
                     </a>
-                    <a href="#" class="<?= navClass(false); ?>">
-                        <i data-lucide="users" class="h-4 w-4"></i>
-                        Pengunjung
-                    </a>
                     <a href="<?= $baseUrl; ?>admin/ulasan" class="<?= navClass($isUlasan); ?>" <?= $isUlasan ? 'aria-current="page"' : ''; ?>>
                         <i data-lucide="star" class="h-4 w-4"></i>
                         Ulasan
-                    </a>
-                    <a href="#" class="<?= navClass(false, 'justify-between'); ?>">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="message-square" class="h-4 w-4"></i>
-                            Pesan
-                        </span>
-                        <span class="rounded-lg bg-accent/20 px-2 py-0.5 text-xs font-semibold text-accent">5</span>
-                    </a>
-                    <a href="#" class="<?= navClass(false); ?>">
-                        <i data-lucide="bell" class="h-4 w-4"></i>
-                        Notifikasi
                     </a>
                 </nav>
             </div>
@@ -99,11 +84,7 @@ function navClass(bool $active, string $extra = ''): string
             <div class="mt-8">
                 <p class="text-xs font-semibold uppercase tracking-widest text-textSecondary">Account</p>
                 <nav class="mt-4 grid gap-2">
-                    <a href="#" class="<?= navClass(false); ?>">
-                        <i data-lucide="file-text" class="h-4 w-4"></i>
-                        Laporan
-                    </a>
-                    <a href="#" class="<?= navClass(false); ?>">
+                    <a href="<?= $baseUrl; ?>admin/pengaturan" class="<?= navClass(false); ?>">
                         <i data-lucide="settings" class="h-4 w-4"></i>
                         Pengaturan
                     </a>

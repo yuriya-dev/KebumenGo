@@ -31,6 +31,26 @@ php -S localhost:8000
 
 3. Buka `http://localhost:8000`.
 
+### Opsi 3: Dengan XAMPP (Local Apache & MySQL)
+1. Salin seluruh folder proyek `KebumenGo` ke dalam direktori `htdocs` XAMPP Anda:
+   - Windows: `C:\xampp\htdocs\KebumenGo`
+   - macOS: `/Applications/XAMPP/xamppfiles/htdocs/KebumenGo`
+2. Jalankan **Apache** dan **MySQL** melalui Control Panel XAMPP.
+3. Impor database proyek:
+   - Buka phpMyAdmin di browser: `http://localhost/phpmyadmin`.
+   - Buat database baru bernama `kebumengo`.
+   - Pilih database tersebut, masuk ke tab **Import**, pilih berkas SQL di `database/kebumengo.sql`, lalu klik **Import**.
+4. Buat file konfigurasi `.env` dari `.env.example`:
+   - Ubah isi `.env` bagian database agar sesuai dengan setup MySQL bawaan XAMPP Anda:
+     ```env
+     DB_HOST=localhost
+     DB_PORT=3306
+     DB_NAME=kebumengo
+     DB_USER=root
+     DB_PASS=
+     ```
+5. Akses aplikasi melalui browser di URL: `http://localhost/KebumenGo/`.
+
 ## 🐳 Docker & phpMyAdmin
 
 ### Akses phpMyAdmin

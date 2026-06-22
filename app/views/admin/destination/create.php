@@ -4,11 +4,7 @@ $currentPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '', '/')
 $isDashboard = $currentPath === 'admin/dashboard';
 $isAnalitik = str_starts_with($currentPath, 'admin/analitik');
 $isDestinasi = str_starts_with($currentPath, 'admin/destinasi') || str_starts_with($currentPath, 'admin/kategori');
-$isPengunjung = str_starts_with($currentPath, 'admin/pengunjung');
 $isUlasan = str_starts_with($currentPath, 'admin/ulasan');
-$isPesan = str_starts_with($currentPath, 'admin/pesan');
-$isNotifikasi = str_starts_with($currentPath, 'admin/notifikasi');
-$isLaporan = str_starts_with($currentPath, 'admin/laporan');
 $isPengaturan = str_starts_with($currentPath, 'admin/pengaturan');
 
 function navClass(bool $active, string $extra = ''): string
@@ -83,24 +79,9 @@ try {
                         <i data-lucide="map-pin" class="h-4 w-4"></i>
                         Destinasi
                     </a>
-                    <a href="<?= $baseUrl; ?>admin/pengunjung" class="<?= navClass($isPengunjung); ?>" <?= $isPengunjung ? 'aria-current="page"' : ''; ?>>
-                        <i data-lucide="users" class="h-4 w-4"></i>
-                        Pengunjung
-                    </a>
                     <a href="<?= $baseUrl; ?>admin/ulasan" class="<?= navClass($isUlasan); ?>" <?= $isUlasan ? 'aria-current="page"' : ''; ?>>
                         <i data-lucide="star" class="h-4 w-4"></i>
                         Ulasan
-                    </a>
-                    <a href="<?= $baseUrl; ?>admin/pesan" class="<?= navClass($isPesan, 'justify-between'); ?>" <?= $isPesan ? 'aria-current="page"' : ''; ?>>
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="message-square" class="h-4 w-4"></i>
-                            Pesan
-                        </span>
-                        <span class="rounded-lg bg-accent/20 px-2 py-0.5 text-xs font-semibold text-accent">5</span>
-                    </a>
-                    <a href="<?= $baseUrl; ?>admin/notifikasi" class="<?= navClass($isNotifikasi); ?>" <?= $isNotifikasi ? 'aria-current="page"' : ''; ?>>
-                        <i data-lucide="bell" class="h-4 w-4"></i>
-                        Notifikasi
                     </a>
                 </nav>
             </div>
@@ -108,10 +89,6 @@ try {
             <div class="mt-8">
                 <p class="text-xs font-semibold uppercase tracking-widest text-textSecondary">Account</p>
                 <nav class="mt-4 grid gap-2">
-                    <a href="<?= $baseUrl; ?>admin/laporan" class="<?= navClass($isLaporan); ?>" <?= $isLaporan ? 'aria-current="page"' : ''; ?>>
-                        <i data-lucide="file-text" class="h-4 w-4"></i>
-                        Laporan
-                    </a>
                     <a href="<?= $baseUrl; ?>admin/pengaturan" class="<?= navClass($isPengaturan); ?>" <?= $isPengaturan ? 'aria-current="page"' : ''; ?>>
                         <i data-lucide="settings" class="h-4 w-4"></i>
                         Pengaturan

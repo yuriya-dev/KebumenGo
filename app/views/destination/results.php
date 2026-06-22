@@ -85,7 +85,7 @@ ob_start();
             <div class="result-grid">
                 <?php foreach ($matches as $destination): ?>
                     <article class="result-card">
-                        <div class="card-media" style="background-image: url('<?= $baseUrl . htmlspecialchars(str_replace('public/', '', (!empty($destination['main_photo']) ? $destination['main_photo'] : 'images/placeholders/destination-placeholder.svg')), ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;"></div>
+                        <div class="card-media" style="background-image: url('<?= $baseUrl . htmlspecialchars(!empty($destination['main_photo']) ? $destination['main_photo'] : 'public/images/placeholders/destination-placeholder.svg', ENT_QUOTES, 'UTF-8'); ?>'); background-size: cover; background-position: center;"></div>
                         <div class="card-body">
                             <div class="card-meta">
                                 <span class="card-category"><?= htmlspecialchars($destination['category'], ENT_QUOTES, 'UTF-8'); ?></span>

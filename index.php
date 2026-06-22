@@ -6,12 +6,27 @@ session_start();
 require __DIR__ . '/app/helpers/functions.php';
 
 define('APP_NAME', 'KebumenGo');
-define('BASE_URL', '/');
+
+// Automatically detect the base URL path (important for subfolder deployments like XAMPP)
+$scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+$baseDir = str_replace('\\', '/', dirname($scriptName));
+if ($baseDir === '/' || $baseDir === '\\') {
+    define('BASE_URL', '/');
+} else {
+    define('BASE_URL', rtrim($baseDir, '/') . '/');
+}
 
 $adminConfig = require __DIR__ . '/config/admin.php';
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '', '/');
+$requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
+$path = $requestUri;
+
+// Strip base URL path from request URI if running in a subdirectory
+if (BASE_URL !== '/' && str_starts_with($requestUri, rtrim(BASE_URL, '/'))) {
+    $path = substr($requestUri, strlen(rtrim(BASE_URL, '/')));
+}
+$path = trim($path, '/');
 $segments = $path === '' ? [] : explode('/', $path);
 
 $viewData = [];
@@ -200,11 +215,11 @@ if ($path === 'admin/login') {
                 
                 $id = (int)($_POST['id'] ?? 0);
                 if ($id > 0) {
-                    $stmt = $db->prepare("UPDATE categories SET name = ?, slug = ?, display_order = ?, icon_path = ? WHERE id = ?");
+                    $stmt = $db->prepare("UPDATE categories SET name = ?, slug = ?, sort_order = ?, icon_img = ? WHERE id = ?");
                     $stmt->execute([$name, $slug, $displayOrder, $iconPath, $id]);
                     setFlash('success', 'Kategori berhasil diperbarui.');
                 } else {
-                    $stmt = $db->prepare("INSERT INTO categories (name, slug, display_order, icon_path) VALUES (?, ?, ?, ?)");
+                    $stmt = $db->prepare("INSERT INTO categories (name, slug, sort_order, icon_img) VALUES (?, ?, ?, ?)");
                     $stmt->execute([$name, $slug, $displayOrder, $iconPath]);
                     setFlash('success', 'Kategori berhasil disimpan.');
                 }
