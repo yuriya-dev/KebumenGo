@@ -2,7 +2,7 @@
 $destination = $destination ?? [];
 $name = $destination['name'] ?? 'Pantai Logending';
 $category = $destination['category'] ?? 'Pantai';
-$price = (int)($destination['price'] ?? 25000);
+$price = (int)($destination['ticket_price'] ?? 25000);
 $rating = (float)($destination['rating'] ?? 4.8);
 $reviews = (int)($destination['reviews'] ?? 120);
 $slug = $destination['slug'] ?? 'pantai-logending';

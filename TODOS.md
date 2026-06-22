@@ -52,7 +52,8 @@ Below is the list of broken, placeholder, or unimplemented features identified a
   * Tries to access `$destination['days']`, `$destination['open']`, `$destination['close']`, and `$destination['maps']` which are actually named `operational_day`, `open_time`, `close_time`, and `maps_embed` in the DB schema. (Fixed)
   * Tries to access `$destination['location']` which does not exist in the database table. (Fixed with fallback)
 
-### 🎫 Destination Card Component
+### 🎫 Destination Card Component [DONE]
 * **File**: [app/views/partials/destination-card.php](file:///Users/wahyutricahya/Web%20Development/KebumenGo/app/views/partials/destination-card.php)
+* **Status**: **Fixed**
 * **Detail**:
-  * Tries to display `$destination['price']` which is named `ticket_price` in the DB query, causing every card to fall back to the default price `Rp 25.000`.
+  * Tries to display `$destination['price']` which is named `ticket_price` in the DB query, causing every card to fall back to the default price `Rp 25.000`. (Fixed)
