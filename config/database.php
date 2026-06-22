@@ -32,5 +32,5 @@ return [
     'host' => $_ENV['DB_HOST'] ?? 'localhost',
     'dbname' => $_ENV['DB_NAME'] ?? 'kebumengo',
     'user' => $_ENV['DB_USER'] ?? 'root',
-    'pass' => $_ENV['DB_PASS'] ?? '',
+    'pass' => $_ENV['DB_PASS'] ?: ($_ENV['DB_PASSWORD'] ?? ''),
 ];
