@@ -22,6 +22,32 @@ try {
         redirect('destinasi'); // redirect if not found
     }
 
+    // Handle review submission
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $token = $_POST['csrf_token'] ?? '';
+        if (!verifyCsrfToken($token)) {
+            setFlash('error', 'Token keamanan tidak valid. Silakan coba lagi.');
+            redirect('destinasi/' . $slug);
+        }
+
+        $name = sanitize($_POST['name'] ?? '');
+        $rating = max(1, min(5, (int)($_POST['rating'] ?? 5)));
+        $comment = sanitize($_POST['comment'] ?? '');
+
+        if (empty($name) || empty($comment)) {
+            setFlash('error', 'Nama dan ulasan wajib diisi.');
+        } else {
+            try {
+                $stmtInsert = $db->prepare("INSERT INTO reviews (dest_id, name, rating, comment, status) VALUES (?, ?, ?, ?, 'pending')");
+                $stmtInsert->execute([$destination['id'], $name, $rating, $comment]);
+                setFlash('success', 'Ulasan Anda berhasil dikirim dan sedang menunggu moderasi.');
+            } catch (Exception $e) {
+                setFlash('error', 'Gagal mengirim ulasan: ' . $e->getMessage());
+            }
+        }
+        redirect('destinasi/' . $slug);
+    }
+
     $destination['facilities'] = !empty($destination['facilities']) ? json_decode($destination['facilities'], true) : [];
     $destination['tips'] = ['Patuhi peraturan setempat', 'Jaga kebersihan lokasi', 'Bawa barang secukupnya'];
     $destination['main_photo'] = !empty($destination['main_photo']) ? $destination['main_photo'] : 'public/images/placeholders/destination-placeholder.svg';
@@ -106,26 +132,37 @@ ob_start();
     <div class="container review-grid">
         <div class="review-form">
             <h3>Tulis ulasan</h3>
-            <form>
+            <?php if ($success = getFlash('success')): ?>
+                <div class="alert alert-success" style="background: #DEF7EC; color: #03543F; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-weight: 500; font-size: 14px;">
+                    <?= htmlspecialchars($success, ENT_QUOTES, 'UTF-8'); ?>
+                </div>
+            <?php endif; ?>
+            <?php if ($error = getFlash('error')): ?>
+                <div class="alert alert-error" style="background: #FDE8E8; color: #9B1C1C; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-weight: 500; font-size: 14px;">
+                    <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
+                </div>
+            <?php endif; ?>
+            <form method="post" action="<?= $baseUrl; ?>destinasi/<?= htmlspecialchars($slug, ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="hidden" name="csrf_token" value="<?= csrfToken(); ?>">
                 <label>
                     Nama
-                    <input type="text" placeholder="Nama kamu" />
+                    <input type="text" name="name" placeholder="Nama kamu" required />
                 </label>
                 <label>
                     Rating
-                    <select>
-                        <option>5</option>
-                        <option>4</option>
-                        <option>3</option>
-                        <option>2</option>
-                        <option>1</option>
+                    <select name="rating">
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
                     </select>
                 </label>
                 <label>
                     Komentar
-                    <textarea rows="4" placeholder="Bagikan pengalamanmu"></textarea>
+                    <textarea name="comment" rows="4" placeholder="Bagikan pengalamanmu" required></textarea>
                 </label>
-                <button class="btn btn-primary" type="button">Kirim Ulasan</button>
+                <button class="btn btn-primary" type="submit">Kirim Ulasan</button>
             </form>
         </div>
         <div class="review-list">
