@@ -19,10 +19,10 @@ Below is the list of broken, placeholder, or unimplemented features identified a
 * **Status**: **Fixed**
 * **Detail**: The review form now successfully performs POST submissions with CSRF validation. Successfully created reviews are stored in the database as 'pending' for moderation.
 
-### 📊 Admin Dashboard Statistics & Charts
+### 📊 Admin Dashboard Statistics & Charts [DONE]
 * **File**: [app/views/admin/dashboard.php](file:///Users/wahyutricahya/Web%20Development/KebumenGo/app/views/admin/dashboard.php)
-* **Status**: **Hardcoded**
-* **Detail**: Total destinations (48), pending (7), and reviews (1.284) along with charts are hardcoded values.
+* **Status**: **Fixed**
+* **Detail**: Total destinations, pending destinations, and total ulasan are now queried dynamically from the database. (Fixed; charts and visitor metrics remain simulated due to lack of analytics traffic table)
 
 ### 📈 Admin Analytics
 * **File**: [app/views/admin/analitik.php](file:///Users/wahyutricahya/Web%20Development/KebumenGo/app/views/admin/analitik.php)

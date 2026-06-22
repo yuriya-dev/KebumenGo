@@ -15,6 +15,18 @@ function navClass(bool $active, string $extra = ''): string
 
     return trim($base . ' ' . $extra);
 }
+
+try {
+    $db = getDB();
+    $totalDestinasi = (int)$db->query("SELECT COUNT(*) FROM destinations")->fetchColumn();
+    $pendingDestinasi = (int)$db->query("SELECT COUNT(*) FROM destinations WHERE status = 'inactive'")->fetchColumn();
+    $totalUlasan = (int)$db->query("SELECT COUNT(*) FROM reviews")->fetchColumn();
+} catch (Exception $e) {
+    $totalDestinasi = 0;
+    $pendingDestinasi = 0;
+    $totalUlasan = 0;
+    error_log("DB Error: " . $e->getMessage());
+}
 ?>
 <!doctype html>
 <html lang="id">
@@ -129,7 +141,7 @@ function navClass(bool $active, string $extra = ''): string
                             </div>
                         </div>
                         <div class="mt-5 flex items-end justify-between">
-                            <div class="text-3xl font-semibold">48</div>
+                            <div class="text-3xl font-semibold"><?= $totalDestinasi; ?></div>
                             <div class="flex items-center gap-1 text-sm font-semibold text-emerald-600">
                                 <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
                                 12%
@@ -152,7 +164,7 @@ function navClass(bool $active, string $extra = ''): string
                             </div>
                         </div>
                         <div class="mt-5 flex items-end justify-between">
-                            <div class="text-3xl font-semibold">7</div>
+                            <div class="text-3xl font-semibold"><?= $pendingDestinasi; ?></div>
                             <div class="flex items-center gap-1 text-sm font-semibold text-emerald-600">
                                 <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
                                 3%
@@ -175,7 +187,7 @@ function navClass(bool $active, string $extra = ''): string
                             </div>
                         </div>
                         <div class="mt-5 flex items-end justify-between">
-                            <div class="text-3xl font-semibold">1.284</div>
+                            <div class="text-3xl font-semibold"><?= number_format($totalUlasan, 0, ',', '.'); ?></div>
                             <div class="flex items-center gap-1 text-sm font-semibold text-emerald-600">
                                 <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
                                 8.5%
